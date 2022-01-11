@@ -18,4 +18,6 @@ public interface ProductMapper {
 
     Product productIncomingDtoToProduct(ProductIncomingDto productIncomingDto);
 
+    List<Product> productsIncomingDtoToProducts(List<ProductIncomingDto> productIncomingDtos);
+
 }

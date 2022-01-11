@@ -34,8 +34,12 @@ public class StockManagerApplication {
 
 			try {
 				productService.deleteByCode("t1");
-				ProductIncomingDto productIncomingDto = new ProductIncomingDto("t1","tablet", 100, 54D, 50D);
-				productService.save(productIncomingDto);
+				List<ProductIncomingDto> productIncomingDtos =Arrays.asList(new ProductIncomingDto[]
+						{new ProductIncomingDto("t1", "tablet", 100, 54D, 50D),
+								new ProductIncomingDto("t2","mobile", 100, 54D, 50D),
+								new ProductIncomingDto("t3","mobile", 100, 54D, 50D)});
+
+				productService.saveAll(productIncomingDtos);
 			}catch (Exception e){}
 		}
 	}

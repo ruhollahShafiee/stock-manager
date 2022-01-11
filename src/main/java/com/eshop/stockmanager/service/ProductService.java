@@ -34,6 +34,13 @@ public class ProductService {
 
     }
 
+    public void saveAll(List<ProductIncomingDto> productIncomingDtos){
+
+        List<Product> products=productMapper.productsIncomingDtoToProducts(productIncomingDtos);
+        productRepository.saveAll(products);
+
+    }
+
     /**
      *
      * @param code
@@ -49,7 +56,7 @@ public class ProductService {
      */
     public ProductDto findByCode(String code){
 
-        Product product= productRepository.findByCode(code);
+        Product product= productRepository.findByCode(code).get();
         ProductDto productDto=productMapper.productToProductDto(product);
         return productDto;
     }
@@ -73,7 +80,7 @@ public class ProductService {
      */
     public Integer getInStockByCode(String code){
 
-        Product product= productRepository.findByCode(code);
+        Product product= productRepository.findByCode(code).get();
         return product.getInStock();
     }
 
@@ -85,7 +92,7 @@ public class ProductService {
      */
     public void refillInStock(String code, Integer inStock){
 
-        Product product= productRepository.findByCode(code);
+        Product product= productRepository.findByCode(code).get();
         product.setInStock(inStock);
         productRepository.save(product);
 
@@ -99,7 +106,7 @@ public class ProductService {
      */
     public void buyProduct(String code, Integer count) throws MoreThanTheStockException {
 
-        Product product= productRepository.findByCode(code);
+        Product product= productRepository.findByCode(code).get();
         if(count >= product.getInStock()){
             throw new MoreThanTheStockException("The requested quantity of this product is more than the stock.");
         }
@@ -118,7 +125,7 @@ public class ProductService {
      */
     public void reserveProduct(String code, Integer count,String sessionId) throws MoreThanTheStockException {
 
-        Product product= productRepository.findByCode(code);
+        Product product= productRepository.findByCode(code).get();
         if(count >= product.getInStock()){
             throw new MoreThanTheStockException("The requested quantity of this product is more than the stock.");
         }

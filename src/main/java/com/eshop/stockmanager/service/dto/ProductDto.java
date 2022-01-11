@@ -1,9 +1,13 @@
 package com.eshop.stockmanager.service.dto;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductDto {
 
     private Integer productId;
@@ -14,14 +18,7 @@ public class ProductDto {
     private Double wholesalePrice;
     private Double totalPrice;
 
-    public ProductDto(){}
 
-    public ProductDto(Integer productId,String name,Integer inStock,Double retailPrice,Double wholesalePrice,Double totalPrice){
-        this.productId=productId;
-        this.name=name;
-        this.inStock=inStock;
-        this.retailPrice=retailPrice;
-        this.wholesalePrice=wholesalePrice;
-        this.totalPrice=totalPrice;
-    }
+
+
 }

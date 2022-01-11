@@ -4,7 +4,6 @@ import com.eshop.stockmanager.controller.exception.MoreThanTheStockException;
 import com.eshop.stockmanager.controller.response.ResponseTemplate;
 import com.eshop.stockmanager.service.ProductService;
 import com.eshop.stockmanager.service.dto.ProductDto;
-import org.hibernate.id.IntegralDataTypeHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +52,7 @@ public class ProductController {
      * @return
      */
     @GetMapping("stock/{code}")
-    public ResponseEntity<Integer> getStockByName(@PathVariable("code") String code){
+    public ResponseEntity<Integer> getStockByCode(@PathVariable("code") String code){
 
         Integer inStock=productService.getInStockByCode(code);
         return new ResponseTemplate(Instant.now(), true, HttpStatus.OK, null, inStock).build();
