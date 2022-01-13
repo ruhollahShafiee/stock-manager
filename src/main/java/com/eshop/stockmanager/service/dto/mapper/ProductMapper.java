@@ -12,9 +12,9 @@ import java.util.List;
 public interface ProductMapper {
 
     @Mapping(target = "productId", source = "id")
-    ProductDto productToProductDto(Product product) ;
+    ProductDto productToProductDto(Product product);
 
-    List<ProductDto> productsToProductDtos(List<Product> products) ;
+    List<ProductDto> productsToProductDtos(List<Product> products);
 
     Product productIncomingDtoToProduct(ProductIncomingDto productIncomingDto);
 

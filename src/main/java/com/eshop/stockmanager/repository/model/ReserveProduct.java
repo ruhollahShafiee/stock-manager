@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name="reserved_product")
+@Table(name = "reserved_product")
 public class ReserveProduct {
 
     @Id
@@ -20,7 +20,7 @@ public class ReserveProduct {
     @Column(name = "reserved_date")
     private Date reservedDate;
 
-    @Column(name="reserved_count")
+    @Column(name = "reserved_count")
     private Integer reservedCount;
 
     @EqualsAndHashCode.Exclude
@@ -28,7 +28,6 @@ public class ReserveProduct {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-
 
 
 }

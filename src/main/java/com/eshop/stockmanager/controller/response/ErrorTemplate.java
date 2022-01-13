@@ -11,10 +11,10 @@ public class ErrorTemplate {
     private String message;
 
 
-    public ErrorTemplate(List<String> errors,Integer code,String message,Boolean showErrorDetails){
-        this.code=code;
-        this.message=message;
-        this.details=(showErrorDetails ? errors:null);
+    public ErrorTemplate(List<String> errors, Integer code, String message, Boolean showErrorDetails) {
+        this.code = code;
+        this.message = message;
+        this.details = (showErrorDetails ? errors : null);
     }
 
 }

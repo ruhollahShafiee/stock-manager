@@ -1,86 +1,81 @@
 package com.eshop.stockmanager.controller;
 
-import com.eshop.stockmanager.controller.exception.MoreThanTheStockException;
-import com.eshop.stockmanager.service.dto.ProductDto;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@AutoConfigureMockMvc
 public class ProductControllerTests {
 
     @Autowired
-    ProductController productController;
+    private MockMvc mockMvc;
 
     @Test
-    public void givenProduct_whenCodeIsT1_thenBuyProduct() {
+    public void givenProduct_whenCodeIsT1_thenReturnTheProduct() throws Exception {
 
-
-        try {
-            ResponseEntity<String> actualResponse = productController.buy("t1", 1);
-            HttpStatus expectedStatusCode = HttpStatus.OK;
-            Assert.assertEquals(actualResponse.getStatusCode(), expectedStatusCode);
-        } catch (MoreThanTheStockException moreThanTheStockException) {
-            Assert.assertTrue(false);
-        } catch (Exception exception) {
-            Assert.assertTrue(false);
-        }
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/findByCode/{code}", "t1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isNotEmpty());
 
     }
 
     @Test
-    public void givenProduct_whenCodeIsT1_thenBuyOutOfOrderProduct() {
+    public void givenProduct_whenNameIsTablet_thenReturnProductDto() throws Exception {
 
-
-        try {
-            ResponseEntity<String> actualResponse = productController.buy("t1", 200);
-            HttpStatus expectedStatusCode = HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS;
-            Assert.assertEquals(actualResponse.getStatusCode(), expectedStatusCode);
-        } catch (MoreThanTheStockException e) {
-            Assert.assertTrue(true);
-        } catch (Exception e) {
-            Assert.assertTrue(false);
-        }
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/findByName/{name}", "tablet")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray());
 
     }
 
     @Test
-    public void givenProduct_whenCodeIsT1_thenRefillProduct() {
+    public void givenProduct_whenCodeIsT1_thenBuyOutOfOrderProduct() throws Exception {
 
-        ResponseEntity<String> actualResponse = productController.refill("t1", 100);
-        HttpStatus expectedStatusCode = HttpStatus.OK;
-        Assert.assertEquals(actualResponse.getStatusCode(), expectedStatusCode);
+        mockMvc.perform(MockMvcRequestBuilders.put("/product/buy/{code}", "t1")
+                .param("count", "200")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isUnavailableForLegalReasons());
+
     }
 
     @Test
-    public void givenProduct_whenCodeIsT1_thenReturnInStock() {
+    public void givenProduct_whenCodeIsT1_thenRefillProduct() throws Exception {
 
-        ResponseEntity<Integer> actualResponse = productController.getStockByCode("t1");
-        HttpStatus expectedStatusCode = HttpStatus.OK;
-        Assert.assertEquals(actualResponse.getStatusCode(), expectedStatusCode);
+        mockMvc.perform(MockMvcRequestBuilders.put("/product/refill/{code}", "t1")
+                .param("in_stock", "100")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
     }
 
     @Test
-    public void givenProduct_whenCodeIsT1_thenReturnProductDto() {
+    public void givenProduct_whenCodeIsT1_thenReturnInStock() throws Exception {
 
-        ResponseEntity<ProductDto> actualResponse = productController.findByCode("t1");
-        HttpStatus expectedStatusCode = HttpStatus.OK;
-        Assert.assertEquals(actualResponse.getStatusCode(), expectedStatusCode);
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/stock/{code}", "t1")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isNumber());
+
     }
 
-    @Test
-    public void givenProduct_whenNameIsTablet_thenReturnProductDto() {
 
-        ResponseEntity<List<ProductDto>> actualResponse = productController.findByName("tablet");
-        HttpStatus expectedStatusCode = HttpStatus.OK;
-        Assert.assertEquals(actualResponse.getStatusCode(), expectedStatusCode);
-    }
 }

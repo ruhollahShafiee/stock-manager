@@ -19,6 +19,4 @@ public class ProductDto {
     private Double totalPrice;
 
 
-
-
 }

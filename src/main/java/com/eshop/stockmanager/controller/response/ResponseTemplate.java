@@ -17,16 +17,16 @@ public class ResponseTemplate<T> {
     private HttpStatus status;
     private T data;
 
-    public ResponseTemplate(Instant timestamp, Boolean succeed, HttpStatus status, ErrorTemplate error, T data){
-        this.timestamp=timestamp;
-        this.succeed=succeed;
-        this.error=error;
-        this.data=data;
-        this.status=status;
+    public ResponseTemplate(Instant timestamp, Boolean succeed, HttpStatus status, ErrorTemplate error, T data) {
+        this.timestamp = timestamp;
+        this.succeed = succeed;
+        this.error = error;
+        this.data = data;
+        this.status = status;
 
     }
 
-    public ResponseEntity build(){
+    public ResponseEntity build() {
         return new ResponseEntity<>(this, status);
     }
 }
