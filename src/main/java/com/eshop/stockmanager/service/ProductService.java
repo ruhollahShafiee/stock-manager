@@ -7,9 +7,11 @@ import com.eshop.stockmanager.service.dto.ProductDto;
 import com.eshop.stockmanager.service.dto.ProductIncomingDto;
 import com.eshop.stockmanager.service.dto.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -61,9 +63,8 @@ public class ProductService {
      */
     public ProductDto findByCode(String code) {
 
-        Product product = productRepository.findByCode(code).get();
-        ProductDto productDto = productMapper.productToProductDto(product);
-        return productDto;
+        Product product = productRepository.findByCode(code).orElseThrow(NoSuchElementException::new);
+        return productMapper.productToProductDto(product);
     }
 
     /**
@@ -73,8 +74,7 @@ public class ProductService {
     public List<ProductDto> findByName(String name) {
 
         List<Product> products = productRepository.findByName(name);
-        List<ProductDto> productDtos = productMapper.productsToProductDtos(products);
-        return productDtos;
+        return productMapper.productsToProductDtos(products);
     }
 
     /**
@@ -83,7 +83,7 @@ public class ProductService {
      */
     public Integer getInStockByCode(String code) {
 
-        Product product = productRepository.findByCode(code).get();
+        Product product = productRepository.findByCode(code).orElseThrow(NoSuchElementException::new);
         return product.getInStock();
     }
 
@@ -94,7 +94,7 @@ public class ProductService {
      */
     public void refillInStock(String code, Integer inStock) {
 
-        Product product = productRepository.findByCode(code).get();
+        Product product = productRepository.findByCode(code).orElseThrow(NoSuchElementException::new);
         product.setInStock(inStock);
         productRepository.save(product);
 
@@ -107,7 +107,7 @@ public class ProductService {
      */
     public void buyProduct(String code, Integer count) throws MoreThanTheStockException {
 
-        Product product = productRepository.findByCode(code).get();
+        Product product = productRepository.findByCode(code).orElseThrow(NoSuchElementException::new);
         if (count >= product.getInStock()) {
             throw new MoreThanTheStockException("The requested quantity of this product is more than the stock.");
         }
@@ -125,7 +125,7 @@ public class ProductService {
      */
     public void reserveProduct(String code, Integer count, String sessionId) throws MoreThanTheStockException {
 
-        Product product = productRepository.findByCode(code).get();
+        Product product = productRepository.findByCode(code).orElseThrow(NoSuchElementException::new);
         if (count >= product.getInStock()) {
             throw new MoreThanTheStockException("The requested quantity of this product is more than the stock.");
         }

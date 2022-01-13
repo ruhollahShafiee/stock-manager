@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @ControllerAdvice
@@ -51,6 +52,16 @@ public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request) {
         return getExceptionResponseEntity(exception, status, request,
                 Collections.singletonList(exception.getLocalizedMessage()), appConfig.getServerThrowErrorDetails());
+    }
+
+    @ExceptionHandler({NoSuchElementException.class})
+    public ResponseEntity handleNoSuchElementException(NoSuchElementException exception, WebRequest request) {
+        ResponseStatus responseStatus =
+                exception.getClass().getAnnotation(ResponseStatus.class);
+        final HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+        final String localizedMessage = exception.getLocalizedMessage();
+        String message = (!StringUtils.isEmpty(localizedMessage) ? localizedMessage : status.getReasonPhrase());
+        return getExceptionResponseEntity(exception, status, request, Collections.singletonList(message), appConfig.getServerThrowErrorDetails());
     }
 
     @ExceptionHandler({MoreThanTheStockException.class})

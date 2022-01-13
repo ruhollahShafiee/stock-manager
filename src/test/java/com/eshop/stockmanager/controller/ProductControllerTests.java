@@ -34,9 +34,30 @@ public class ProductControllerTests {
     }
 
     @Test
+    public void givenProduct_whenCodeIsNotExist_thenReturnNotAcceptableStatus() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/findByCode/{code}", "invalidCode")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable());
+
+    }
+
+    @Test
     public void givenProduct_whenNameIsTablet_thenReturnProductDto() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/product/findByName/{name}", "tablet")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data").isArray());
+
+    }
+
+    @Test
+    public void givenProduct_whenNameIsNotExist_thenReturnEmptyArray() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/product/findByName/{name}", "invalidName")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
